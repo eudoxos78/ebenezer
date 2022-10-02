@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { createStyles, Button, Drawer, Group, ScrollArea, Table, Title } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { STATUS, useJson } from '../../hooks/json';
+import { useSiteContext } from '../../providers/SiteContext';
+import endpoints from '../../utils/endpoints';
 import LoadingDots from '../../common/LoadingDots';
 import Coin from '../coin/Coin';
 
@@ -46,21 +48,12 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const Coins = () => {
+    const { currency, currencyFormatter, percentFormatter } = useSiteContext();
     const [page, setPage] = useState(1);
-    const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=50&page=${page}`;
     const [isTableScrolled, setIsTableScrolled] = useState(false);
     const [isDrawerOpened, setIsDrawerOpened] = useState(false);
     const [selectedCoinInfo, setSelectedCoinInfo] = useState(null);
-    const { status, data } = useJson(url);
-    const currencyFormatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: 20,
-    });
-    const percentFormatter = new Intl.NumberFormat('en-US', {
-        style: 'percent',
-        maximumFractionDigits: 20,
-    });
+    const { status, data } = useJson(endpoints.coins(currency, page));
     const { classes, cx, theme } = useStyles();
     const matches = useMediaQuery(`(min-width: ${theme.breakpoints.sm}px)`);
 

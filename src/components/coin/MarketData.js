@@ -1,4 +1,5 @@
 import { Title } from '@mantine/core';
+import { useSiteContext } from '../../providers/SiteContext';
 import DataWrapper from '../../common/DataWrapper';
 import Data from '../../common/Data';
 
@@ -18,16 +19,8 @@ const MarketData = ({
     atl,
     atl_date,
 }) => {
-    const currencyFormatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: 20,
-    });
-    const percentFormatter = new Intl.NumberFormat('en-US', {
-        style: 'percent',
-        maximumFractionDigits: 20,
-    });
-
+    const { locale, currency, currencyFormatter, percentFormatter } = useSiteContext();
+    
     return (
         <div>
             <Title order={4}>Market Data</Title>
@@ -35,74 +28,74 @@ const MarketData = ({
             <DataWrapper>
                 <Data
                     caption="Price" 
-                    value={current_price?.['usd']} 
+                    value={current_price?.[currency]} 
                     formatter={currencyFormatter} 
                 />
                 <Data
                     caption="Price change % (24h)"
-                    value={price_change_percentage_24h_in_currency?.['usd']} 
+                    value={price_change_percentage_24h_in_currency?.[currency]} 
                     formatter={percentFormatter}
                 />
                 <Data
                     caption="Price change % (7d)"
-                    value={price_change_percentage_7d_in_currency?.['usd']} 
+                    value={price_change_percentage_7d_in_currency?.[currency]} 
                     formatter={percentFormatter}
                 />
                 <Data
                     caption="Price change % (14d)"
-                    value={price_change_percentage_14d_in_currency?.['usd']} 
+                    value={price_change_percentage_14d_in_currency?.[currency]} 
                     formatter={percentFormatter}
                 />
                 <Data
                     caption="Price change % (30d)"
-                    value={price_change_percentage_30d_in_currency?.['usd']} 
+                    value={price_change_percentage_30d_in_currency?.[currency]} 
                     formatter={percentFormatter}
                 />
                 <Data
                     caption="Price change % (60d)"
-                    value={price_change_percentage_60d_in_currency?.['usd']} 
+                    value={price_change_percentage_60d_in_currency?.[currency]} 
                     formatter={percentFormatter}
                 />
                 <Data
                     caption="Price change % (200d)"
-                    value={price_change_percentage_200d_in_currency?.['usd']} 
+                    value={price_change_percentage_200d_in_currency?.[currency]} 
                     formatter={percentFormatter}
                 />
                 <Data
                     caption="Price change % (1y)"
-                    value={price_change_percentage_1y_in_currency?.['usd']} 
+                    value={price_change_percentage_1y_in_currency?.[currency]} 
                     formatter={percentFormatter}
                 />
                 <Data
                     caption="Highest price (24h)"
-                    value={high_24h?.['usd']} 
+                    value={high_24h?.[currency]} 
                     formatter={currencyFormatter}
                 />
                 <Data
                     caption="Lowest price (24h)"
-                    value={low_24h?.['usd']} 
+                    value={low_24h?.[currency]} 
                     formatter={currencyFormatter}
                 />
                 <Data
                     caption="All time high"
-                    value={ath?.['usd']} 
+                    value={ath?.[currency]} 
                     formatter={currencyFormatter}
                 />
-                {ath_date?.['usd'] && (
+                {ath_date?.[currency] && (
                     <Data
                         caption="All time high (date)"
-                        value={new Date(ath_date['usd']).toLocaleDateString('el')}
+                        value={new Date(ath_date[currency]).toLocaleDateString(locale)}
                     />
                 )}
                 <Data
                     caption="All time low"
-                    value={atl?.['usd']} 
+                    value={atl?.[currency]} 
                     formatter={currencyFormatter}
                 />
-                {atl_date?.['usd'] && (
+                {atl_date?.[currency] && (
                     <Data
                         caption="All time low (date)"
-                        value={new Date(atl_date['usd']).toLocaleDateString('el')}
+                        value={new Date(atl_date[currency]).toLocaleDateString(locale)}
                     />
                 )}
             </DataWrapper>

@@ -1,5 +1,6 @@
 import { createStyles, ScrollArea, Stack } from '@mantine/core';
 import { STATUS, useJson } from '../../hooks/json';
+import endpoints from '../../utils/endpoints';
 import LoadingDots from '../../common/LoadingDots';
 import Description from './Description';
 import MarketData from './MarketData';
@@ -20,17 +21,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const Coin = ({ coinId }) => {
-    const url = `https://api.coingecko.com/api/v3/coins/${coinId}?tickers=false`;
-    const { status, data } = useJson(url);
-    const currencyFormatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: 20,
-    });
-    const percentFormatter = new Intl.NumberFormat('en-US', {
-        style: 'percent',
-        maximumFractionDigits: 20,
-    });
+    const { status, data } = useJson(endpoints.coin(coinId));
     const { classes } = useStyles();
 
     return (

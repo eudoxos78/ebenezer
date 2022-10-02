@@ -11,6 +11,8 @@ import {
 } from 'recharts';
 import { createStyles, SegmentedControl, Title } from '@mantine/core';
 import { STATUS, useJson } from '../../hooks/json';
+import { useSiteContext } from '../../providers/SiteContext';
+import endpoints from '../../utils/endpoints';
 import LoadingDots from '../../common/LoadingDots';
 
 const useStyles = createStyles((theme) => ({
@@ -42,14 +44,9 @@ const getToLocaleStringOptions = (days) => {
 };
 
 const Chart = ({ coinId }) => {
+    const { locale, currency, currencyFormatter } = useSiteContext();
     const [days, setDays] = useState('14');
-    const url = `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=${days}`;
-    const { status, data } = useJson(url);
-    const currencyFormatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: 20,
-    });
+    const { status, data } = useJson(endpoints.chart(coinId, currency, days));
     const { classes } = useStyles();
     let prices;
 
@@ -57,7 +54,7 @@ const Chart = ({ coinId }) => {
         const options = getToLocaleStringOptions(days);
         
         prices = data.prices.map((price) => ({
-            date: new Date(price[0]).toLocaleString('el', options),
+            date: new Date(price[0]).toLocaleString(locale, options),
             price: price[1],
         }));
     }

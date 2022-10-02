@@ -1,4 +1,5 @@
 import { Title } from '@mantine/core';
+import { useSiteContext } from '../../providers/SiteContext';
 import DataWrapper from '../../common/DataWrapper';
 import Data from '../../common/Data';
 
@@ -6,11 +7,8 @@ const Reputation = ({
     up_votes_percentage,
     down_votes_percentage,
 }) => {
-    const percentFormatter = new Intl.NumberFormat('en-US', {
-        style: 'percent',
-        maximumFractionDigits: 20,
-    });
-
+    const { percentFormatter } = useSiteContext();
+    
     return (
         <div>
             <Title order={4}>Reputation</Title>

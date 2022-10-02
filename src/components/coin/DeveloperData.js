@@ -1,4 +1,5 @@
 import { Title } from '@mantine/core';
+import { useSiteContext } from '../../providers/SiteContext';
 import DataWrapper from '../../common/DataWrapper';
 import Data from '../../common/Data';
 
@@ -10,20 +11,52 @@ const DeveloperData = ({
     closed_issues,
     pull_requests_merged,
     pull_request_contributors,
-}) => (
-    <div>
-        <Title order={4}>Developer Data</Title>
+}) => {
+    const { numberFormatter } = useSiteContext();
 
-        <DataWrapper>
-            <Data caption="Forks" value={forks} />
-            <Data caption="Stars" value={stars} />
-            <Data caption="Subscribers" value={subscribers} />
-            <Data caption="Total issues" value={total_issues} />
-            <Data caption="Closed issues" value={closed_issues} />
-            <Data caption="Pull requests merged" value={pull_requests_merged} />
-            <Data caption="Pull request contributors" value={pull_request_contributors} />
-        </DataWrapper>
-    </div>
-);
+    return (
+        <div>
+            <Title order={4}>Developer Data</Title>
+
+            <DataWrapper>
+                <Data 
+                    caption="Forks" 
+                    value={forks} 
+                    formatter={numberFormatter}
+                />
+                <Data
+                     caption="Stars" 
+                     value={stars} 
+                     formatter={numberFormatter}
+                />
+                <Data
+                     caption="Subscribers" 
+                     value={subscribers} 
+                     formatter={numberFormatter}
+                />
+                <Data
+                     caption="Total issues" 
+                     value={total_issues} 
+                     formatter={numberFormatter}
+                />
+                <Data
+                     caption="Closed issues" 
+                     value={closed_issues} 
+                     formatter={numberFormatter}
+                />
+                <Data
+                     caption="Pull requests merged" 
+                     value={pull_requests_merged} 
+                     formatter={numberFormatter}
+                />
+                <Data
+                     caption="Pull request contributors" 
+                     value={pull_request_contributors} 
+                     formatter={numberFormatter} 
+                />
+            </DataWrapper>
+        </div>
+    );
+};
 
 export default DeveloperData;
