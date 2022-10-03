@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
     ResponsiveContainer,
     LineChart,
@@ -13,6 +13,7 @@ import { createStyles, SegmentedControl, Title } from '@mantine/core';
 import { STATUS, useJson } from '../../hooks/json';
 import { useSiteContext } from '../../providers/SiteContext';
 import endpoints from '../../utils/endpoints';
+import getDateFormatOptions from '../../utils/getDateFormatOptions';
 import LoadingDots from '../../common/LoadingDots';
 
 const useStyles = createStyles((theme) => ({
@@ -31,34 +32,20 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-const getToLocaleStringOptions = (days) => {
-    if (days === '1') {
-        return { hour: 'numeric', minute: 'numeric', hour12: false };
-    }
-
-    if (days === '14' || days === '30' || days === '90' || days === '365') {
-        return { day: 'numeric', month: 'numeric' };
-    }
-
-    return { day: 'numeric', month: 'numeric', year: '2-digit' };
-};
-
 const Chart = ({ coinId }) => {
     const { locale, currency, currencyFormatter } = useSiteContext();
     const [days, setDays] = useState('14');
-    const { status, data } = useJson(endpoints.chart(coinId, currency, days));
-    const { classes } = useStyles();
-    let prices;
-
-    if (status === STATUS.RESOLVED) {
-        const options = getToLocaleStringOptions(days);
+    const transformData = useCallback((data) => {
+        const options = getDateFormatOptions(days);
         
-        prices = data.prices.map((price) => ({
+        return data?.prices?.map((price) => ({
             date: new Date(price[0]).toLocaleString(locale, options),
             price: price[1],
         }));
-    }
-
+    }, [days, locale]);
+    const { status, data } = useJson(endpoints.chart(coinId, currency, days), transformData);
+    const { classes } = useStyles();
+    
     return (
         <div className={classes.wrapper}>
             <Title order={4} className={classes.title}>
@@ -84,7 +71,7 @@ const Chart = ({ coinId }) => {
                     </div>
 
                     <ResponsiveContainer width="100%" height={400}>
-                        <LineChart data={prices} margin={{ top: 24, right: 24, left: 0, bottom: 16 }}>
+                        <LineChart data={data} margin={{ top: 24, right: 24, left: 0, bottom: 16 }}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="date" />
                             <YAxis />

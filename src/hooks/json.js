@@ -18,7 +18,7 @@ const reducer = (state, action) => {
   }
 };
 
-export const useJson = (url) => {
+export const useJson = (url, transformData) => {
   const urlStr = url.toString();
   const [state, dispatch] = useReducer(reducer, {
     status: IDLE,
@@ -50,7 +50,9 @@ export const useJson = (url) => {
       })
       .then((data) => {
         if (isMounted) {
-          dispatch({ type: RESOLVED, data });
+          const transformedData = transformData ? transformData(data) : data;
+
+          dispatch({ type: RESOLVED, data: transformedData });
         }
       })
       .catch((error) => {
@@ -62,7 +64,7 @@ export const useJson = (url) => {
     return () => {
       isMounted = false;
     };
-  }, [dispatch, urlStr]);
+  }, [dispatch, urlStr, transformData]);
 
   return state;
 };
